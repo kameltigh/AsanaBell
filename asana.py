@@ -27,6 +27,7 @@ class asanaAPI():
 		self.asana_api_url = "https://app.asana.com/api/1.0"
 		self.token = asana_params.token
 		self.wrkspace_name = asana_params.workspace_name
+		self.project_subname = asana_params.project_subname
 		self.auth_key = base64.b64encode(self.token + ":")
 
 
@@ -38,7 +39,7 @@ class asanaAPI():
 		# while True:
 
 	def get_workspace_id(self):
-		workspaces_target = ('workspaces')
+		workspaces_target = 'workspaces'
 		workspaces_req = requests.get("/".join([self.asana_api_url, quote(workspaces_target, safe="/&=?")]), auth=(self.token, ""))		
 		found_ws = False
 		for ws in json.loads(workspaces_req.text)['data']:
@@ -51,5 +52,21 @@ class asanaAPI():
 			print 'workspace not found'
 			return None
 
+	def get_project_id(self):
+		projects_target = 'projects'
+		projects_req = requests.get("/".join([self.asana_api_url, quote(projects_target, safe="/&=?")]), auth=(self.token, ""))		
+		found_project = False
+		projects_ids = []
+		for project in json.loads(projects_req.text)['data']:
+			if self.project_subname in project['name']:
+				print 'Found project | id = '+str(project['id'])
+				projects_ids.append(project['id'])
+				found_project = True
+		if(not found_project):
+			print 'No project contains the specified subname'
+			return None
+
+
 toto = asanaAPI()
 toto.asana()
+toto.get_project_id()
