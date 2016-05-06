@@ -34,7 +34,8 @@ class asanaAPI():
 	# @classmethod
 	def asana(self):
 		workspace_id = self.get_workspace_id()
-		if(not workspace_id):
+		projects_ids = self.get_projects_id()
+		if(not workspace_id or not projects_ids):
 			return None
 		# while True:
 
@@ -52,7 +53,7 @@ class asanaAPI():
 			print 'workspace not found'
 			return None
 
-	def get_project_id(self):
+	def get_projects_id(self):
 		projects_target = 'projects'
 		projects_req = requests.get("/".join([self.asana_api_url, quote(projects_target, safe="/&=?")]), auth=(self.token, ""))		
 		found_project = False
@@ -67,6 +68,5 @@ class asanaAPI():
 			return None
 
 
-toto = asanaAPI()
-toto.asana()
-toto.get_project_id()
+test_instance = asanaAPI()
+test_instance.asana()
