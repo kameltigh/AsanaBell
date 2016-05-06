@@ -1,1 +1,2 @@
-asana_token.py
+asana_params.py
+*.pyc
