@@ -17,6 +17,7 @@ from urllib import quote
 import json
 # from asana_params import token
 import asana_params
+import datetime
 
 
 
@@ -33,11 +34,15 @@ class asanaAPI():
 
 	# @classmethod
 	def asana(self):
-		workspace_id = self.get_workspace_id()
-		projects_ids = self.get_projects_id()
-		if(not workspace_id or not projects_ids):
-			return None
-		# while True:
+		while True:
+			workspace_id = self.get_workspace_id()
+			projects_ids = self.get_projects_id()
+			if((not workspace_id) or (not projects_ids)):
+				# return None
+				print 'Error | '+str(workspace_id)+" | "+str(projects_ids)
+			else:
+				for project_id in projects_ids:
+					self.get_validated_tasks(workspace_id, project_id)
 
 	def get_workspace_id(self):
 		workspaces_target = 'workspaces'
@@ -52,6 +57,7 @@ class asanaAPI():
 		if(not found_ws):
 			print 'workspace not found'
 			return None
+		return workspace_id
 
 	def get_projects_id(self):
 		projects_target = 'projects'
@@ -65,6 +71,24 @@ class asanaAPI():
 				found_project = True
 		if(not found_project):
 			print 'No project contains the specified subname'
+			return None
+		return projects_ids
+
+	def get_validated_tasks(self, workspace_id, project_id):
+		validation_time = datetime.datetime.now().isoformat()[:-3]+'Z'
+		time.sleep(10)
+		# print 'looking for tasks completed since '+validation_time
+		tasks_target = 'tasks?workspace=%d&project=%d&completed_since=%s&include_archived=%s' % (workspace_id, project_id, validation_time, "false")
+		# print "Query = "+"/".join([self.asana_api_url, quote(tasks_target, safe="/&=?")])
+		tasks_req = requests.get("/".join([self.asana_api_url, quote(tasks_target, safe="/&=?")]), auth=(self.token, ""))		
+		found_tasks = False
+		tasks_ids = []
+		for project in json.loads(tasks_req.text)['data']:
+			print 'Found task | data = '+str(project)
+			# projects_ids.append(project['id'])
+			found_project = True
+		if(not found_project):
+			print 'No task contains the specified subname'
 			return None
 
 
