@@ -8,6 +8,8 @@ Asana API gets tasks completion from Asana to action a bell.
 
 By Kamel TIGHIDET <tighidet.kamel@gmail.com>
 
+TODO : Factoring GET requests
+
 """
 
 import base64
@@ -15,7 +17,6 @@ import requests
 import time
 from urllib import quote
 import json
-# from asana_params import token
 import asana_params
 import datetime
 
@@ -77,15 +78,13 @@ class asanaAPI():
 	def get_validated_tasks(self, workspace_id, project_id):
 		validation_time = datetime.datetime.now().isoformat()[:-3]+'Z'
 		time.sleep(10)
-		# print 'looking for tasks completed since '+validation_time
 		tasks_target = 'tasks?workspace=%d&project=%d&completed_since=%s&include_archived=%s' % (workspace_id, project_id, validation_time, "false")
-		# print "Query = "+"/".join([self.asana_api_url, quote(tasks_target, safe="/&=?")])
 		tasks_req = requests.get("/".join([self.asana_api_url, quote(tasks_target, safe="/&=?")]), auth=(self.token, ""))		
 		found_tasks = False
 		tasks_ids = []
 		for project in json.loads(tasks_req.text)['data']:
 			print 'Found task | data = '+str(project)
-			# projects_ids.append(project['id'])
+			projects_ids.append(project['id'])
 			found_project = True
 		if(not found_project):
 			print 'No task contains the specified subname'
