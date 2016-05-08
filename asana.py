@@ -78,13 +78,13 @@ class asanaAPI():
 	def get_validated_tasks(self, workspace_id, project_id):
 		validation_time = datetime.datetime.now().isoformat()[:-3]+'Z'
 		time.sleep(10)
-		tasks_target = 'tasks?workspace=%d&project=%d&completed_since=%s&include_archived=%s' % (workspace_id, project_id, validation_time, "false")
+		tasks_target = 'tasks?workspace=%d&project=%d&completed_since=%s&include_archived=%s' % (workspace_id, project_id, validation_time, 'true')
 		tasks_req = requests.get("/".join([self.asana_api_url, quote(tasks_target, safe="/&=?")]), auth=(self.token, ""))		
 		found_tasks = False
 		tasks_ids = []
-		for project in json.loads(tasks_req.text)['data']:
-			print 'Found task | data = '+str(project)
-			projects_ids.append(project['id'])
+		for task in json.loads(tasks_req.text)['data']:
+			print 'Found task | data = '+str(task)
+			tasks_ids.append(task['id'])
 			found_project = True
 		if(not found_project):
 			print 'No task contains the specified subname'
