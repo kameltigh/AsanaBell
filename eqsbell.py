@@ -27,9 +27,9 @@ IO.output(PIN_BELL, IO.HIGH)
 def jingle_bell():
 	try:
 		IO.output(PIN_BELL, IO.LOW)
-		time.sleep(10)
+		time.sleep(5)
 		IO.output(PIN_BELL, IO.HIGH)
 	except:
 		IO.output(PIN_BELL, IO.HIGH)
 
-jingle_bell()
+# jingle_bell()
