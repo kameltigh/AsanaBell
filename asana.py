@@ -108,8 +108,6 @@ class asanaAPI():
 					found_task = True
 					if snap_task['completed'] == False:
 						is_newly_completed = False			
-			# if not found_task:
-			# 	print "found_task = "+str(found_task)+" is_newly_completed = "+str(is_newly_completed)
 			if not found_task and is_newly_completed:
 				if task_id in self.completed_eventually:
 					if self.completed_eventually[task_id] == 0:
@@ -120,7 +118,6 @@ class asanaAPI():
 						time.sleep(3)
 					elif self.completed_eventually[task_id] > 0:
 						self.completed_eventually[task_id] -= 1
-						# print "Not found in a project"
 				else:
 					self.completed_eventually[task_id] = self.nb_projects
 			else:
